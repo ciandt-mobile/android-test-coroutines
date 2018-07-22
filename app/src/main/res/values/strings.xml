@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Test Coroutines</string>
+    <string name="up">+</string>
+    <string name="down">-</string>
+</resources>
