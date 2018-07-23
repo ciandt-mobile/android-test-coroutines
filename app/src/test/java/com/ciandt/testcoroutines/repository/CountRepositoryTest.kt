@@ -9,7 +9,7 @@ class CountRepositoryTest {
     @Test
     fun increase_shouldIncreaseCounting() = runBlocking {
 
-        val repository = CountRepository()
+        val repository = CountRepositoryImpl()
 
         var count = 0
 
@@ -21,7 +21,7 @@ class CountRepositoryTest {
     @Test
     fun decrease_shouldDecreaseCounting() = runBlocking {
 
-        val repository = CountRepository()
+        val repository = CountRepositoryImpl()
 
         var count = 0
 

@@ -6,8 +6,10 @@ import android.arch.lifecycle.ViewModel
 import com.ciandt.testcoroutines.infrastructure.coroutines.UI
 import com.ciandt.testcoroutines.infrastructure.coroutines.callAsync
 import com.ciandt.testcoroutines.repository.CountRepository
+import com.ciandt.testcoroutines.repository.RepositoriesInjector
 
-class MainViewModel(private val repository: CountRepository = CountRepository()) : ViewModel() {
+class MainViewModel(private val repository: CountRepository = RepositoriesInjector.countRepository) :
+    ViewModel() {
 
     private val _count = MutableLiveData<Int>().apply { value = 0 }
 

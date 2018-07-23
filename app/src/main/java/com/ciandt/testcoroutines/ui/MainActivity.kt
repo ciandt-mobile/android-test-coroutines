@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.viewModel = viewModel
 
-        btnUp.setOnClickListener { viewModel.increase() }
-        btnDown.setOnClickListener { viewModel.decrease() }
+        btnIncrease.setOnClickListener { viewModel.increase() }
+        btnDecrease.setOnClickListener { viewModel.decrease() }
     }
 }
