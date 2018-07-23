@@ -25,6 +25,9 @@ android {
     dataBinding {
         enabled = true
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 kotlin {
@@ -49,7 +52,13 @@ dependencies {
     //Android Architecture Components
     implementation "android.arch.lifecycle:extensions:$arch_version"
 
+    //Unit Test
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$test_espresso_version"
+    testImplementation "android.arch.core:core-testing:$arch_version"
+
+    //UI Test
+    androidTestImplementation "com.android.support.test:runner:$test_espresso_version"
+    androidTestImplementation "com.android.support.test:rules:$test_espresso_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$test_espresso_core_version"
+    androidTestImplementation "com.android.support.test.espresso:espresso-idling-resource:$test_espresso_core_version"
 }
