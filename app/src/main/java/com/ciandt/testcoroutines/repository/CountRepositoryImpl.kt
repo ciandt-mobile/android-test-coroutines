@@ -1,18 +1,17 @@
 package com.ciandt.testcoroutines.repository
 
-import kotlinx.coroutines.experimental.CommonPool
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
+import com.ciandt.testcoroutines.infrastructure.coroutines.callAsync
+import kotlinx.coroutines.delay
 
 class CountRepositoryImpl : CountRepository {
 
-    override fun increase(count: Int) = async(CommonPool) {
-        delay(500)
+    override fun increase(count: Int) = callAsync<Int> {
+        delay(1000)
         count + 1
     }
 
-    override fun decrease(count: Int) = async(CommonPool) {
-        delay(500)
+    override fun decrease(count: Int) = callAsync<Int> {
+        delay(1000)
         count - 1
     }
 }

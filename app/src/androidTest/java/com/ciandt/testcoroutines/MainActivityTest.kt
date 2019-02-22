@@ -6,11 +6,11 @@ import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
+import com.ciandt.testcoroutines.infrastructure.coroutines.callAsync
 import com.ciandt.testcoroutines.repository.CountRepository
 import com.ciandt.testcoroutines.repository.RepositoriesInjector
 import com.ciandt.testcoroutines.tools.EspressoCoroutinesRule
 import com.ciandt.testcoroutines.ui.MainActivity
-import kotlinx.coroutines.experimental.async
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,14 +41,14 @@ class MainActivityTest {
 
     @Test
     fun increaseButton_shouldIncreaseCounting() {
-        `when`(repository.increase(0)).thenReturn(async { 1 })
+        `when`(repository.increase(0)).thenReturn(callAsync<Int> { 1 })
         onView(withId(R.id.btnIncrease)).perform(click())
         onView(withText("1")).check(matches(isDisplayed()))
     }
 
     @Test
     fun increaseButton_shouldDecreaseCounting() {
-        `when`(repository.decrease(0)).thenReturn(async { -1 })
+        `when`(repository.decrease(0)).thenReturn(callAsync<Int> { -1 })
         onView(withId(R.id.btnDecrease)).perform(click())
         onView(withText("-1")).check(matches(isDisplayed()))
     }

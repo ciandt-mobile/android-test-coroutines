@@ -1,13 +1,20 @@
 package com.ciandt.testcoroutines.repository
 
-import kotlinx.coroutines.experimental.runBlocking
+import com.ciandt.testcoroutines.infrastructure.coroutines.callAsync
+import com.ciandt.testcoroutines.tools.UnitTestCoroutinesRule
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Rule
 import org.junit.Test
 
 class CountRepositoryTest {
 
+    @Rule
+    @JvmField
+    val coroutinesRule = UnitTestCoroutinesRule()
+
     @Test
-    fun increase_shouldIncreaseCounting() = runBlocking {
+    fun increase_shouldIncreaseCounting() = callAsync {
 
         val repository = CountRepositoryImpl()
 
@@ -19,7 +26,7 @@ class CountRepositoryTest {
     }
 
     @Test
-    fun decrease_shouldDecreaseCounting() = runBlocking {
+    fun decrease_shouldDecreaseCounting() = callAsync {
 
         val repository = CountRepositoryImpl()
 

@@ -1,37 +1,61 @@
 package com.ciandt.testcoroutines.infrastructure.coroutines
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.launch
+import com.ciandt.testcoroutines.infrastructure.extensions.cast
+import kotlinx.coroutines.*
 
-typealias CoroutineExecutor = (CallAsyncContext, suspend CoroutineScope.() -> Unit) -> Unit
+typealias CoroutineLaunchExecutor = (CallAsyncContext, suspend CoroutineScope.() -> Unit) -> Unit
 
-class CallAsyncExecutor private constructor() {
+typealias CoroutineAsyncExecutor<T> = (CallAsyncContext, suspend CoroutineScope.() -> T) -> Deferred<T>
 
-    private val defaultDelegate: CoroutineExecutor = { asyncContext, block ->
-        launch(asyncContext.context, block = block)
-    }
+class CoroutineExecutor private constructor() {
 
-    var delegate: CoroutineExecutor? = null
+    var launchExecutor: CoroutineLaunchExecutor? = null
 
-    fun execute(
-        asyncContext: CallAsyncContext = CommonPool,
-        block: suspend CoroutineScope.() -> Unit
-    ) {
-        delegate?.let {
-            it(asyncContext, block)
-        } ?: run {
-            defaultDelegate(asyncContext, block)
+    var asyncExecutor: CoroutineAsyncExecutor<*>? = null
+
+    private val defaultLaunchExecutor: CoroutineLaunchExecutor
+
+    private val defaultAsyncExecutor: CoroutineAsyncExecutor<*>
+
+    init {
+
+        defaultLaunchExecutor = { asyncContext, block ->
+            CoroutineScope(asyncContext.toCoroutineContext()).launch(block = block)
+        }
+
+        defaultAsyncExecutor = { asyncContext, block ->
+            CoroutineScope(asyncContext.toCoroutineContext()).async(block = block)
         }
     }
 
+    fun launch(
+        asyncContext: CallAsyncContext = IO,
+        block: suspend CoroutineScope.() -> Unit
+    ) {
+        launchExecutor?.let {
+            it(asyncContext, block)
+        } ?: run {
+            defaultLaunchExecutor(asyncContext, block)
+        }
+    }
+
+    fun <T> async(
+        asyncContext: CallAsyncContext = IO,
+        block: suspend CoroutineScope.() -> T
+    ) = asyncExecutor?.invoke(asyncContext, block) ?: defaultAsyncExecutor(asyncContext, block)
+
+
     companion object {
-        var instance: CallAsyncExecutor = CallAsyncExecutor()
+        var instance: CoroutineExecutor = CoroutineExecutor()
     }
 }
 
 fun callAsync(
-    asyncContext: CallAsyncContext = CommonPool,
+    asyncContext: CallAsyncContext = Main,
     block: suspend CoroutineScope.() -> Unit
-) {
-    CallAsyncExecutor.instance.execute(asyncContext, block)
-}
+) = CoroutineExecutor.instance.launch(asyncContext, block)
+
+fun <T> callAsync(
+    asyncContext: CallAsyncContext = IO,
+    block: suspend CoroutineScope.() -> T
+): Deferred<T> = CoroutineExecutor.instance.async(asyncContext, block).cast()

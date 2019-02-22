@@ -1,6 +1,6 @@
 package com.ciandt.testcoroutines.repository
 
-import kotlinx.coroutines.experimental.Deferred
+import kotlinx.coroutines.Deferred
 
 interface CountRepository {
     fun increase(count: Int): Deferred<Int>
